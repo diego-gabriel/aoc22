@@ -10,52 +10,37 @@ const DRAW: i32 = 3;
 const LOSE: i32 = 0;
 
 fn shape(k: char) -> i32 {
-	if k == 'A' || k == 'X' {
-		return ROCK;
+	return match k {
+		'A' | 'X' => ROCK,
+		'B' | 'Y' => PAPER,
+		_ => SCISSORS,
 	}
-	if k == 'B' || k == 'Y' {
-		return PAPER;
-	}
-	return SCISSORS;
 }
 
+fn correct_shape(s: i32) -> i32 {
+	if s == 0 {
+		return SCISSORS;
+	} else {
+		return s;
+	}
+}
 
 fn figure_shape(outcome: char, s: i32) -> i32 {
-	if outcome == 'X' {
-		if s == ROCK {
-			return SCISSORS;
-		}
-		if s == PAPER {
-			return ROCK;
-		}
-		return PAPER;
+	return match outcome {
+		'X' => correct_shape((s+2)%3),
+		'Z' => correct_shape((s+1)%3),
+		_ => s,
 	}
-	if outcome == 'Z' {
-		if s == ROCK {
-			return PAPER;
-		}
-		if s == PAPER {
-			return SCISSORS;
-		}
-		return ROCK;
-	}
-	return s;
-}
-
-fn result(comparison: i32) -> i32 {
-	if comparison == 1 || comparison == -2 {
-		return WIN;
-	}
-
-	if comparison == 0 {
-		return DRAW;
-	}
-
-	return LOSE;
 }
 
 fn score(p1: i32, p2: i32) -> i32 {
-	return result(p2-p1)+p2;
+	let result = match p2-p1 {
+		1 | -2 => WIN,
+		0 => DRAW,
+		_ => LOSE,
+	};
+
+	return result+p2;
 }
 
 fn main() {
